@@ -1,3 +1,3 @@
-export type Playlist = {
-    urls : string[]
-}
+import { Music } from "./Music"
+
+export type Playlist = Music[]

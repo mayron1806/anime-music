@@ -12,9 +12,19 @@ export const Container = styled.div`
     align-items:center;
     background-color:var(--white);
 `;
-const Icons = styled.img`
+type IconsProps = {
+    interactable:boolean
+}
+const Icons = styled.button<IconsProps>`
     width:2rem;
     height:2rem;
+    img{
+        width:2rem;
+        height:2rem;
+    }
+    pointer-events: ${(props)=> props.interactable ? "all" : "none"};
+    opacity: ${(props)=> props.interactable ? 1 : .5};
+    cursor: ${(props)=> props.interactable ? "pointer" : "auto"};
 `;
 // name
 export const MusicName = styled.p`

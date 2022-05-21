@@ -7,6 +7,7 @@ export const GlobalStyle = createGlobalStyle`
         box-sizing: border-box;
         text-decoration:none;
         margin:0;
+        outline:none;
     }
     html{
         font-size 62.5%;
@@ -14,7 +15,7 @@ export const GlobalStyle = createGlobalStyle`
     }
     :root{
         --black: #2D2A2A;
-        --white: rgba(244, 244, 244, 0.9);
+        --white: rgba(244, 244, 244);
         --white-transparent: rgba(44, 44, 44, 0.1);
         --main: #18BDC8;
     }
