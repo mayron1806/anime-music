@@ -1,10 +1,16 @@
 import { useAudio } from '../../Hooks/useAudio';
 //icons
-import nextButton from "../../icons/next.svg";
-import playButton from "../../icons/play.svg";
-import pauseButton from "../../icons/pause.svg";
-import volume from "../../icons/volume.svg";
-import mute from "../../icons/volume-mute.svg";
+
+import { FaStepBackward, FaStepForward } from "react-icons/fa";
+import {
+    BsFillVolumeUpFill, 
+    BsVolumeDownFill, 
+    BsFillVolumeOffFill, 
+    BsFillVolumeMuteFill, 
+    BsFillPlayFill,
+    BsFillPauseFill
+} from "react-icons/bs";
+
 //style
 import * as C from "./musicPlayer.styles";
 //utils
@@ -18,19 +24,37 @@ type Props = {
 }
 export const MusicPlayer = ({playlist, isLoading} : Props) =>{
     const player = useAudio(playlist);
-
+    const playIcon = ()=>{
+        if(player.audio.paused){
+            return <BsFillPlayFill size={50}/>
+        }
+        return <BsFillPauseFill size={50}/>
+    }
+    const volumeIcon = () => {
+        const defaultSize = 40;
+        if(player.audio.volume >= 0.9){
+            return <BsFillVolumeUpFill size={defaultSize} />
+        }
+        if(player.audio.volume >= 0.3){
+            return <BsVolumeDownFill size={defaultSize} />
+        }
+        if(player.audio.volume >= 0.01){
+            return <BsFillVolumeOffFill size={defaultSize} />
+        }
+        return <BsFillVolumeMuteFill size={defaultSize} />
+    }
     return(
         <C.Container className='player'>
             <C.MusicName>{player.musicName}</C.MusicName>
             <C.ButtonsContainer>
                 <C.previousMusic interactable={!isLoading} onClick={()=>console.log("a")}>
-                    <img src={nextButton} alt="previous button" />
+                    <FaStepBackward id='back' size={40} />
                 </C.previousMusic>
                 <C.PlayMusic interactable={!isLoading} onClick={player.changePlayState}>
-                    <img src={player.audio.paused ? playButton : pauseButton}  alt="play" />
+                    {playIcon()}
                 </C.PlayMusic>
                 <C.NextMusic interactable={!isLoading} onClick={player.nextMusic}>
-                    <img src={nextButton} alt="next button" />
+                    <FaStepForward size={40}/>
                 </C.NextMusic>
             </C.ButtonsContainer>
             <C.PlaybackContainer>
@@ -54,7 +78,7 @@ export const MusicPlayer = ({playlist, isLoading} : Props) =>{
             </C.PlaybackContainer>
             <C.VolumeContainer>
                 <C.VolumeIcon interactable={!isLoading} onClick={() => player.setMute()}>
-                    <img src={player.muted ? mute : volume} alt="volume" />
+                    {volumeIcon()}
                 </C.VolumeIcon>
                 <C.VolumeBar type="range"
                     min={0} 

@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 export const Container = styled.div`
     width:100vw;
-    height: 6rem;
+    height: 10rem;
     display:grid;
     grid-template-columns: 1fr 50vw 1fr;
     grid-template-rows: 4rem 1fr;
@@ -11,20 +11,21 @@ export const Container = styled.div`
     "name playback volume";
     align-items:center;
     background-color:var(--white);
+    padding:1rem;
 `;
 type IconsProps = {
     interactable:boolean
 }
 const Icons = styled.button<IconsProps>`
-    width:2rem;
-    height:2rem;
-    img{
-        width:2rem;
-        height:2rem;
-    }
+    width: 5rem;
+    height: 5rem;
+    color: var(--black);
+    cursor: ${props=> props.interactable ? "pointer" : "auto"};
     pointer-events: ${(props)=> props.interactable ? "all" : "none"};
     opacity: ${(props)=> props.interactable ? 1 : .5};
-    cursor: ${(props)=> props.interactable ? "pointer" : "auto"};
+    #back{
+        transform: rotate(180deg);
+    }
 `;
 // name
 export const MusicName = styled.p`
@@ -69,7 +70,7 @@ export const PlaybackBar = styled.input`
         width: 100%;
         height: 0.1rem;
         cursor: pointer;
-        animate: 0.2s;
+        
         background: var(--white);
     }
     
@@ -92,7 +93,6 @@ export const VolumeBar = styled.input`
         width: 100%;
         height: 0.1rem;
         cursor: pointer;
-        animate: 0.2s;
         background: var(--white);
     }
     

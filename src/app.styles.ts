@@ -5,6 +5,10 @@ export const Container = styled.div`
   width: 100vw;
   overflow: hidden;
   position: relative;
+  .player{
+    position: absolute;
+    bottom: 0;
+  }
 `;
 export const ButtonForm = styled.div`
   cursor: pointer;
