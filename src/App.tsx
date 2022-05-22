@@ -1,4 +1,6 @@
 import { useEffect, useState } from 'react';
+
+import * as C from "./app.styles";
 //services
 import Music from './services/Music';
 // components
@@ -10,6 +12,7 @@ import { Playlist } from './types/Playlist';
 function App() {
   const [playlist, setPlaylist] = useState<Playlist>();
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [formActive, setFormActive] = useState<boolean>(false);
 
   useEffect(()=>{
     const getAllMusics = async () => {
@@ -21,10 +24,12 @@ function App() {
   }, []);
 
   return(
-    <div>
-      <FormAddMusic/>
+    <C.Container>
+      <C.ButtonForm className={formActive ? "active" : ""} onClick={e=> setFormActive(!formActive)}/>
+      <FormAddMusic isActive={formActive}/>
       <MusicPlayer playlist={playlist} isLoading={isLoading}/>
-    </div>
+
+    </C.Container>
   )
 }
 

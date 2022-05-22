@@ -10,7 +10,7 @@ export const GlobalStyle = createGlobalStyle`
         outline:none;
     }
     html{
-        font-size 62.5%;
+        font-size: 62.5%;
         font-family: 'Roboto Flex', sans-serif;
     }
     :root{

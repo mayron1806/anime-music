@@ -1,56 +1,63 @@
-import { FormEvent, useState } from "react"
+import { FormEvent, useEffect, useRef, useState } from "react"
 import Music from "../../services/Music";
+import { Upload } from "../Upload";
+
+import { FileFormats } from "../../FileFormats";
+
+import { MusicFiles } from "../../types/Music";
 
 import * as C from "./formAddMusic.styles";
+import { Result } from "../../types/Result";
+import { status } from "../../enums/status";
+import { StatusMessage } from "../StatusMessage";
+import { Input } from "../Input";
 
-export const FormAddMusic = () => {
+type props = {isActive:boolean}
+
+export const FormAddMusic = ({ isActive }: props) => {
+    const [musicName, setMusicName] = useState<string>("");
     const [uploadingMusic, setUploadingMusic] = useState<boolean>(false);
-    const submitForm = (e: FormEvent<HTMLFormElement>) => {
-        setUploadingMusic(true);
+    const [statusMessage, setStatusMessage] = useState<Result>({status: status.DEFAULT, message:""});
+
+    const [musicFiles] = useState<MusicFiles>({} as MusicFiles);
+    const setImageFile = (file : File | undefined) => musicFiles.imageFile = file;
+    const setAudioFile = (file : File | undefined)  => musicFiles.audioFile = file;
+
+    const submitForm = (e: FormEvent) => {
         e.preventDefault();
-
-        const formData = new FormData(e.currentTarget);
-        // pega os dados do formulario
-        const musicName = formData.get("name");
-        const musicImage = formData.get("music-image") as File;
-        const music = formData.get("music") as File;    
-
-        // verifica se foram enviados os arquivos
-        if(!musicImage || (musicImage && musicImage.size <= 0)) return;
-        if(!music || (music && music.size <= 0)) return;
-
-        // envia os dados para o banco de dados
-        Music.sendMusic(music, musicImage, musicName?.toString())
-        .then(()=>{
-            console.log("Sucesso");
-        })
-        .catch((e)=>{
-            console.log(e);
-        })
-        setUploadingMusic(false);
+        const addMusic = async()=>{
+            setUploadingMusic(true);
+            const res = await Music.sendMusic(musicFiles.audioFile, musicFiles.imageFile, musicName)
+            setStatusMessage(res);
+            setUploadingMusic(false);
+        }
+        addMusic();
     }
-    return(
-        <C.Container>
-            <C.Form onSubmit={e => submitForm(e)}>
-                <C.Title>Adicionar Música</C.Title>
-                <label htmlFor="name">Nome da musica(Opcional):</label>
-                <C.Name type="text" name="name"/>
-                
-                <C.FileRef htmlFor="music-image">Imagem da música</C.FileRef>
-                <input type="file" name="music-image" id="music-image"/>
+    return( 
+        <C.Form
+            isActive={isActive} 
+            isUploading={uploadingMusic} 
+            onSubmit={e => submitForm(e)}
+        >
+            <C.Title>Adicionar Música</C.Title>
 
-                <C.FileRef htmlFor="music">Escolha a música</C.FileRef>
-                <input type="file" name="music" id="music" />
-
-                <C.Submit type="submit" id="fileupload" value="Enviar" />
-            </C.Form>
-            {
-                uploadingMusic && 
-                <C.LoadingContainer>
-                    <div className="animated"></div>
-                </C.LoadingContainer>
-            }
-            
-        </C.Container>
+            <Input setName={setMusicName}/>
+            <C.FileContainer>
+                <Upload 
+                    maxSize={0.2} 
+                    setFile={setImageFile} 
+                    accept={FileFormats.imageFormats} 
+                    acceptedFilesMessage={FileFormats.imageFormatsMessage}
+                />
+                <Upload 
+                    maxSize={2} 
+                    setFile={setAudioFile}
+                    accept={FileFormats.audioFormats} 
+                    acceptedFilesMessage={FileFormats.audioFormatsMessage}
+                />
+            </C.FileContainer>
+            <C.Submit className="submit" type="submit" id="fileupload" value="Adicionar" />
+            <StatusMessage statusMessage={statusMessage} />
+        </C.Form>
     )
 }

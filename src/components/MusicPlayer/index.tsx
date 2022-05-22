@@ -20,7 +20,7 @@ export const MusicPlayer = ({playlist, isLoading} : Props) =>{
     const player = useAudio(playlist);
 
     return(
-        <C.Container>
+        <C.Container className='player'>
             <C.MusicName>{player.musicName}</C.MusicName>
             <C.ButtonsContainer>
                 <C.previousMusic interactable={!isLoading} onClick={()=>console.log("a")}>

@@ -1,59 +1,76 @@
 import styled, { keyframes } from "styled-components";
 
-export const Container = styled.div`
+const blockForm = (isUploading: boolean) =>{
+    if(isUploading){
+        return `
+            ::before{
+                content: "";
+                width: 100%;
+                height: 100%;
+                background-color: var(--white-transparent);
+                position: absolute;
+                top: 0;
+                left: 0;
+                z-index: 10;
+            }
+        `;
+    }
+}
+export const Form = styled.form<{isUploading: boolean, isActive: boolean}>`
+    z-index: 5;
     position: absolute;
-    background-color:var(--white);
-    top:50%;
-    left:50%;
-    transform: translate(-50%, -50%);
+    right: 0;
+    top: 0;
+    background-color: var(--white);
     padding: 1rem;
-    border-radius:1rem;
-    color: var(--black);
-    box-shadow: 4px 4px 4px var(--white-transparent);
-`;
-export const Form = styled.form`
-    label{
-        display:block;
-        font-size:1.2rem;
-        margin-bottom:0.5rem;
+    height: 100%;
+    min-width: 40vw;
+    max-width: 50vw;
+    box-shadow: -4px 0 4px var(--white-transparent);
+    transition: .5s;
+    transform: translateX(${props => props.isActive ? "0%" : "110%"});
+    input[type="text"], .upload, .submit{
+        pointer-events: ${props => props.isUploading ? "none" : "initial"};
     }
-    input[type="file"]{
-        display:none;
-    }
+    ${props => blockForm(props.isUploading)}
 `;
 export const Title = styled.h2`
-    text-align:center;
-    margin-bottom:1rem;
+    text-align:left;
+    color: var(--main);
+    font-size: 2rem;
+    height: 5rem;
 `;
-export const Name = styled.input`
-    background-color:transparent;
-    border-bottom: 1px solid var(--black);
-    width:100%;
-    font-size:1.2rem;
-    color:var(--black);
-    margin-bottom:0.5rem;
-    transition:0.5s;
-    
-    &:focus, &:hover{
-        border-bottom: 1px solid var(--main);
-        background-color:var(--white-transparent);
-        padding:0.5rem;
+export const FileContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 1rem;
+    justify-content: space-between;
+    margin: 1rem 0;
+    .upload{
+        width: 100%;
     }
 `;
-export const FileRef = styled.label`
-    background-color: var(--black);
-    padding: 0.5rem;
-    cursor: pointer;
-    text-align: center;
-    color:var(--white);
-`;
 export const Submit = styled.input`
+    font-size: 1.6rem;
+    font-weight: 600;
     width:100%;
-    padding:0.5rem; 
+    padding: 1rem; 
     cursor:pointer;
-    margin-bottom:1rem;
     background-color:var(--main);
     color:var(--white);
+    position: relative;
+    border-radius: 0.5rem;
+    &::before{
+        content: "";
+        width: 5rem;
+        height: 5rem;
+        background-color: var(--white-transparent);
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        z-index: 20;
+    }
 `;
 
 const loadingAnim = keyframes`
@@ -62,20 +79,6 @@ const loadingAnim = keyframes`
     }
     100%{
         transform: Rotate(360deg);
-    }
-`;
-const dotsAnim = keyframes`
-    0%{
-        content:"Adicionando";
-    }
-    25%{
-        content:"Adicionando.";
-    }
-    50%{
-        content:"Adicionando..";
-    }
-    100%{
-        content:"Adicionando...";
     }
 `;
 export const LoadingContainer = styled.div`
@@ -102,10 +105,4 @@ export const LoadingContainer = styled.div`
             height: 0;
         }
     }
-    &::before{
-        content:"Adicionando";
-        font-size: 1.6rem;
-        animation:${dotsAnim} 1s linear infinite;
-    }
-    
-`;  
+`;
