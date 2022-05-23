@@ -10,7 +10,7 @@ export const Container = styled.div`
     "name buttons ."
     "name playback volume";
     align-items:center;
-    background-color:var(--white);
+    background-color:var(--gray);
     padding:1rem;
 `;
 type IconsProps = {
@@ -19,6 +19,7 @@ type IconsProps = {
 const Icons = styled.button<IconsProps>`
     width: 5rem;
     height: 5rem;
+    background-color: var(--gray);
     color: var(--black);
     cursor: ${props=> props.interactable ? "pointer" : "auto"};
     pointer-events: ${(props)=> props.interactable ? "all" : "none"};

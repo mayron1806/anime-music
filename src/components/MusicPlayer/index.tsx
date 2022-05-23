@@ -17,14 +17,60 @@ import * as C from "./musicPlayer.styles";
 import { Time } from '../../utils/Time';
 //types 
 import { Playlist } from '../../types/Playlist';
+import { useContext, useEffect, useRef } from 'react';
+import { CurrentMusicContext } from '../../Context/CurrentMusicContext';
 
 type Props = {
-    playlist: Playlist | undefined,
-    isLoading: Boolean
+    playlist: Playlist | undefined
 }
-export const MusicPlayer = ({playlist, isLoading} : Props) =>{
-    const player = useAudio(playlist);
-    const playIcon = ()=>{
+export const MusicPlayer = ({playlist} : Props) =>{
+    const player = useAudio();
+    
+    const playbackBarRef = useRef<HTMLInputElement | null>(null);
+
+    const currentMusicContext = useContext(CurrentMusicContext);
+
+    useEffect(()=>{
+        if(playlist === undefined) return;
+        player.setMusic(playlist[currentMusicContext.currentMusicIndex]);
+    }, [playlist])
+
+    const changePlayState = () => {
+        if(player.audio.paused) return player.play();
+        return player.pause();
+    }
+
+    const nextMusic = () => {
+        if(playlist === undefined) return;
+        const index = currentMusicContext.currentMusicIndex;
+        if(playlist[index + 1]){
+            currentMusicContext.setCurrentMusicIndex(index + 1);
+        }
+        else{
+            currentMusicContext.setCurrentMusicIndex(0);
+        }
+    }   
+    const previousMusic = () => {
+        if(playlist === undefined) return;
+        const index = currentMusicContext.currentMusicIndex;
+        if(playlist[index - 1]){
+            currentMusicContext.setCurrentMusicIndex(index - 1);
+        }
+        else{
+            currentMusicContext.setCurrentMusicIndex(playlist.length - 1);
+        }
+    }
+    useEffect(()=>{
+        if(playlist === undefined) return;
+        player.setMusic(playlist[currentMusicContext.currentMusicIndex]);
+        player.play();
+    }, [currentMusicContext.currentMusicIndex])
+
+    const a = ()=>{console.log("a")}
+    //events
+    player.audio.onended = () => nextMusic();
+
+    const playIcon = () => {
         if(player.audio.paused){
             return <BsFillPlayFill size={50}/>
         }
@@ -42,18 +88,28 @@ export const MusicPlayer = ({playlist, isLoading} : Props) =>{
             return <BsFillVolumeOffFill size={defaultSize} />
         }
         return <BsFillVolumeMuteFill size={defaultSize} />
+    } 
+
+    const musicIsUndefined = ()=>{
+        if(playlist === undefined) return true;
+        return playlist[currentMusicContext.currentMusicIndex] !== undefined;
+    }
+
+    const musicName = () : string => {
+        if(playlist === undefined) return "";
+        return playlist[currentMusicContext.currentMusicIndex].musicName
     }
     return(
         <C.Container className='player'>
-            <C.MusicName>{player.musicName}</C.MusicName>
+            <C.MusicName>{musicName()}</C.MusicName>
             <C.ButtonsContainer>
-                <C.previousMusic interactable={!isLoading} onClick={()=>console.log("a")}>
+                <C.previousMusic interactable={musicIsUndefined()} onClick={()=> previousMusic()}>
                     <FaStepBackward id='back' size={40} />
                 </C.previousMusic>
-                <C.PlayMusic interactable={!isLoading} onClick={player.changePlayState}>
+                <C.PlayMusic interactable={musicIsUndefined()} onClick={()=>{changePlayState()}}>
                     {playIcon()}
                 </C.PlayMusic>
-                <C.NextMusic interactable={!isLoading} onClick={player.nextMusic}>
+                <C.NextMusic interactable={musicIsUndefined()} onClick={()=> nextMusic()}>
                     <FaStepForward size={40}/>
                 </C.NextMusic>
             </C.ButtonsContainer>
@@ -62,10 +118,11 @@ export const MusicPlayer = ({playlist, isLoading} : Props) =>{
                     {Time.ConvertToTime(player.currentTime)}
                 </C.PlaybackValue>
                 <C.PlaybackBar type="range"
+                    ref={playbackBarRef}
                     min={0}
                     max={player.audio.duration.toString()}
-                    value={player.currentTime} 
-                    onChange={(e)=>{player.setCurrentTime(e.target.value);}} 
+                    value={player.currentTime}
+                    onChange={(e)=>{ player.setCurrentTime(parseInt(e.target.value)) }} 
                 />
                 <C.PlaybackValue>
                 {
@@ -77,7 +134,7 @@ export const MusicPlayer = ({playlist, isLoading} : Props) =>{
                 </C.PlaybackValue>
             </C.PlaybackContainer>
             <C.VolumeContainer>
-                <C.VolumeIcon interactable={!isLoading} onClick={() => player.setMute()}>
+                <C.VolumeIcon interactable={musicIsUndefined()} onClick={() => player.setMute()}>
                     {volumeIcon()}
                 </C.VolumeIcon>
                 <C.VolumeBar type="range"

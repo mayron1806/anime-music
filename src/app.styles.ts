@@ -9,6 +9,15 @@ export const Container = styled.div`
     position: absolute;
     bottom: 0;
   }
+  main{
+    padding: 5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: calc(100% - 10rem);
+    gap: 2rem;
+  }
 `;
 export const ButtonForm = styled.div`
   cursor: pointer;
@@ -21,7 +30,7 @@ export const ButtonForm = styled.div`
   z-index: 100;
   right: 0;
   &:hover{
-    background-color: var(--white-transparent);
+    background-color: var(--gray);
   }
   ::before, ::after{
     content: "";

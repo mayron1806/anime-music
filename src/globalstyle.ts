@@ -16,12 +16,12 @@ export const GlobalStyle = createGlobalStyle`
     :root{
         --black: #2D2A2A;
         --white: rgba(244, 244, 244);
-        --white-transparent: rgba(44, 44, 44, 0.1);
+        --gray: #D8D8D8;
         --main: #18BDC8;
     }
     body{
         width:100vw;
         height:100vh;
-        background-color: var(--white-transparent);
+        background-color: var(--white);
     }
 `;

@@ -7,7 +7,7 @@ const blockForm = (isUploading: boolean) =>{
                 content: "";
                 width: 100%;
                 height: 100%;
-                background-color: var(--white-transparent);
+                background-color: var(--gray);
                 position: absolute;
                 top: 0;
                 left: 0;
@@ -26,7 +26,7 @@ export const Form = styled.form<{isUploading: boolean, isActive: boolean}>`
     height: 100%;
     min-width: 40vw;
     max-width: 50vw;
-    box-shadow: -4px 0 4px var(--white-transparent);
+    box-shadow: -4px 0 4px var(--gray);
     transition: .5s;
     transform: translateX(${props => props.isActive ? "0%" : "110%"});
     input[type="text"], .upload, .submit{
@@ -65,7 +65,7 @@ export const Submit = styled.input`
         content: "";
         width: 5rem;
         height: 5rem;
-        background-color: var(--white-transparent);
+        background-color: var(--gray);
         position: absolute;
         top: 50%;
         left: 50%;
