@@ -18,6 +18,7 @@ export const GlobalStyle = createGlobalStyle`
         --white: rgba(244, 244, 244);
         --gray: #D8D8D8;
         --main: #18BDC8;
+        
     }
     body{
         width:100vw;

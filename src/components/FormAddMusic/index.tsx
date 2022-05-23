@@ -1,4 +1,4 @@
-import { FormEvent, useEffect, useRef, useState } from "react"
+import { FormEvent, useRef, useState } from "react"
 import Music from "../../services/Music";
 import { Upload } from "../Upload";
 
@@ -17,6 +17,7 @@ type props = {isActive:boolean}
 export const FormAddMusic = ({ isActive }: props) => {
     const [musicName, setMusicName] = useState<string>("");
     const [uploadingMusic, setUploadingMusic] = useState<boolean>(false);
+    const [resetForm, setResetForm] = useState<boolean>(false);
     const [statusMessage, setStatusMessage] = useState<Result>({status: status.DEFAULT, message:""});
 
     const [musicFiles] = useState<MusicFiles>({} as MusicFiles);
@@ -26,10 +27,15 @@ export const FormAddMusic = ({ isActive }: props) => {
     const submitForm = (e: FormEvent) => {
         e.preventDefault();
         const addMusic = async()=>{
+            setResetForm(false);
             setUploadingMusic(true);
             const res = await Music.sendMusic(musicFiles.audioFile, musicFiles.imageFile, musicName)
             setStatusMessage(res);
             setUploadingMusic(false);
+            // quando true os elemtos do formulario irao resetar
+            setResetForm(true);
+            setImageFile(undefined);
+            setAudioFile(undefined);
         }
         addMusic();
     }
@@ -41,11 +47,11 @@ export const FormAddMusic = ({ isActive }: props) => {
         >
             <C.Title>Adicionar Música</C.Title>
 
-            <Input setName={setMusicName}/>
+            <Input reset={resetForm} setName={setMusicName}/>
             <C.FileContainer>
                 <Upload 
                     maxSize={0.2} 
-                    setFile={setImageFile} 
+                    setFile={setImageFile}
                     accept={FileFormats.imageFormats} 
                     acceptedFilesMessage={FileFormats.imageFormatsMessage}
                 />
@@ -56,7 +62,17 @@ export const FormAddMusic = ({ isActive }: props) => {
                     acceptedFilesMessage={FileFormats.audioFormatsMessage}
                 />
             </C.FileContainer>
-            <C.Submit className="submit" type="submit" id="fileupload" value="Adicionar" />
+            <C.SubmitContainer isUploading={uploadingMusic}>
+                <C.Submit 
+                    isUploading={uploadingMusic} 
+                    className="submit" 
+                    type="submit" 
+                    id="fileupload" 
+                    value="Adicionar" 
+                />
+                <C.submitAnim />
+            </C.SubmitContainer>
+            
             <StatusMessage statusMessage={statusMessage} />
         </C.Form>
     )

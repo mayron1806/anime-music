@@ -32,10 +32,11 @@ const Icons = styled.button<IconsProps>`
 export const MusicName = styled.p`
     grid-area:name;
     white-space:nowrap;
-    width: 15rem;
+    width: 20vw;
+    font-weight: 600;
     overflow: hidden; 
     text-overflow: ellipsis;
-    font-size:1.3rem;
+    font-size: 2rem;
 `;
 // buttons
 export const ButtonsContainer = styled.div`
@@ -63,7 +64,7 @@ export const PlaybackContainer = styled.div`
     justify-content: space-evenly; 
 `;
 export const PlaybackValue = styled.span`
-
+    font-size: 1.6rem;
 `;
 export const PlaybackBar = styled.input`
     width:80%;

@@ -7,7 +7,7 @@ const blockForm = (isUploading: boolean) =>{
                 content: "";
                 width: 100%;
                 height: 100%;
-                background-color: var(--gray);
+                background-color: rgba(0, 0, 0, 0.1);
                 position: absolute;
                 top: 0;
                 left: 0;
@@ -29,7 +29,7 @@ export const Form = styled.form<{isUploading: boolean, isActive: boolean}>`
     box-shadow: -4px 0 4px var(--gray);
     transition: .5s;
     transform: translateX(${props => props.isActive ? "0%" : "110%"});
-    input[type="text"], .upload, .submit{
+    input[type="text"]{
         pointer-events: ${props => props.isUploading ? "none" : "initial"};
     }
     ${props => blockForm(props.isUploading)}
@@ -51,58 +51,57 @@ export const FileContainer = styled.div`
         width: 100%;
     }
 `;
-export const Submit = styled.input`
+const submitContainerHeadler = (isUploading : boolean) => {
+    if(isUploading){
+        return`
+            input{ color: var(--main); }
+            div{ display: initial; }
+        `;
+    }
+    return``;
+}
+export const SubmitContainer = styled.div<{isUploading: boolean}>`
+    width:100%;
+    position: relative; 
+    ${props => submitContainerHeadler(props.isUploading)}
+`;
+export const Submit = styled.input<{isUploading: boolean}>`
     font-size: 1.6rem;
     font-weight: 600;
+    height: 100%;
     width:100%;
-    padding: 1rem; 
+    padding: 1.5rem; 
     cursor:pointer;
     background-color:var(--main);
-    color:var(--white);
-    position: relative;
+    color: var(--white);
     border-radius: 0.5rem;
-    &::before{
-        content: "";
-        width: 5rem;
-        height: 5rem;
-        background-color: var(--gray);
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        z-index: 20;
-    }
 `;
-
-const loadingAnim = keyframes`
+const animation = keyframes`
     0%{
-        transform: Rotate(0deg);
+        transform: translate(-50%, -50%) rotate(0);
     }
     100%{
-        transform: Rotate(360deg);
+        transform: translate(-50%, -50%) rotate(360deg);
     }
 `;
-export const LoadingContainer = styled.div`
-    text-align:center;
-    .animated{
-        width: 5rem;
-        height: 5rem;
-        margin:1rem auto;
-        border-radius:50%;
-        border:1rem solid var(--white); 
-        position: relative;
-        
-        animation:${loadingAnim} 1s linear infinite;
-        &::before{
-            content:"";
-            position:absolute;
-            top:50%;
-            left:50%;
-            transform: translate(-50%, 0);
-            width: 1.5rem;
-            border-bottom: 3rem solid var(--main);
-            border-left: 1.5rem solid transparent;
-            border-right: 1.5rem solid transparent;
-            height: 0;
-        }
+export const submitAnim = styled.div`
+    display: none;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    height: 3.5rem;
+    width: 3.5rem;
+    border-radius: 50%;
+    border: 3px solid var(--white);
+    animation: ${animation} 1s linear infinite;
+    ::before{
+        content: "";
+        position: absolute;
+        left: 50%;
+        transform: translate(-50%, 10%);
+        width: 1rem;
+        height: 3rem;
+        background-color: var(--main);
     }
+
 `;

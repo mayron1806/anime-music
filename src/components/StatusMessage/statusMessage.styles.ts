@@ -8,6 +8,8 @@ const setColorByStatus = (s : status) => {
     return "var(--main)";
 }
 export const statusMessage = styled.div<{status : status}>`
+    margin-top: 2rem;
     color: ${(props) => setColorByStatus(props.status)};
+    font-size: 1.6rem;
     text-align: center;
 `;

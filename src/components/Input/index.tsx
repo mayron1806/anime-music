@@ -1,10 +1,18 @@
-import React, { Dispatch } from "react";
+import React, { Dispatch, useEffect, useRef } from "react";
 import * as C from "./input.styles";
 type props = {
-    setName: Dispatch<React.SetStateAction<string>>
+    setName: Dispatch<React.SetStateAction<string>>,
+    reset: boolean
 }
-export const Input = ({setName} : props) => {
+export const Input = ({setName, reset} : props) => {
+    const inputRef = useRef<HTMLInputElement | null>(null);
     
+    useEffect(()=>{
+        if(reset && inputRef !== null && inputRef.current != undefined){
+           inputRef.current.value = "";    
+        }
+    }, [reset])
+
     const change = (element:HTMLInputElement) => {
         setName(element.value);
         if(element.value !== "" || element.focus){
@@ -21,7 +29,7 @@ export const Input = ({setName} : props) => {
     return(
         <C.NameContainer>
             <label htmlFor="name">Nome da musica(Opcional):</label>
-            <input type="text" id="name" name="name"
+            <input ref={inputRef} type="text" id="name" name="name"
                 onBlur={(e)=> blur(e.target)}
                 onFocus={(e)=> e.target.parentElement?.classList.add("active")} 
                 onChange={(e)=> change(e.target)}

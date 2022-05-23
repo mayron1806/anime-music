@@ -1,6 +1,7 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {FileRejection, useDropzone} from "react-dropzone";
 import { IoDocumentOutline, IoHandLeftOutline, IoCheckmarkCircleOutline } from "react-icons/io5"
+import { setCommentRange } from "typescript";
 import * as C from "./upload.styles";
 
 const BYTES_MULTIPLY = 1000000;
@@ -81,7 +82,7 @@ export const Upload = ({setFile, accept, acceptedFilesMessage,maxSize = 0.5}: pr
     }
     return(
         <C.DropContainer className="upload" {...getRootProps({isDragAccept, isDragReject, isAcceptFile})}>
-            <input {...getInputProps()} />
+            <input{...getInputProps()} />
             {dropZoneContent()}
         </C.DropContainer>
     )
