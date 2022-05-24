@@ -1,10 +1,13 @@
 import React, { Dispatch, useEffect, useRef } from "react";
 import * as C from "./input.styles";
 type props = {
-    setName: Dispatch<React.SetStateAction<string>>,
-    reset: boolean
+    required? : boolean
+    type? :string,
+    inputName: string,
+    setValue: Dispatch<React.SetStateAction<string>>,
+    reset?: boolean
 }
-export const Input = ({setName, reset} : props) => {
+export const Input = ({inputName ,setValue, reset = false, type = "text", required = false} : props) => {
     const inputRef = useRef<HTMLInputElement | null>(null);
     
     useEffect(()=>{
@@ -14,7 +17,7 @@ export const Input = ({setName, reset} : props) => {
     }, [reset])
 
     const change = (element:HTMLInputElement) => {
-        setName(element.value);
+        setValue(element.value);
         if(element.value !== "" || element.focus){
             element.parentElement?.classList.add("active");
         }else{
@@ -26,14 +29,25 @@ export const Input = ({setName, reset} : props) => {
             element.parentElement?.classList.remove("active");
         }
     }
+
     return(
         <C.NameContainer>
-            <label htmlFor="name">Nome da musica(Opcional):</label>
-            <input ref={inputRef} type="text" id="name" name="name"
-                onBlur={(e)=> blur(e.target)}
-                onFocus={(e)=> e.target.parentElement?.classList.add("active")} 
-                onChange={(e)=> change(e.target)}
-            />
+            <label htmlFor="name">{inputName}</label>
+            {
+                required && 
+                <input ref={inputRef} type={type} id="name" name="name" required
+                    onBlur={(e)=> blur(e.target)}
+                    onFocus={(e)=> e.target.parentElement?.classList.add("active")} 
+                    onChange={(e)=> change(e.target)}
+                />
+                || 
+                <input ref={inputRef} type={type} id="name" name="name"
+                    onBlur={(e)=> blur(e.target)}
+                    onFocus={(e)=> e.target.parentElement?.classList.add("active")} 
+                    onChange={(e)=> change(e.target)}
+                />
+            }
+           
         </C.NameContainer>
     )
 }

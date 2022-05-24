@@ -47,7 +47,11 @@ export const FormAddMusic = ({ isActive }: props) => {
         >
             <C.Title>Adicionar Música</C.Title>
 
-            <Input reset={resetForm} setName={setMusicName}/>
+            <Input 
+                inputName="Nome da Música:" 
+                reset={resetForm} 
+                setValue={setMusicName}
+            />
             <C.FileContainer>
                 <Upload 
                     maxSize={0.2} 

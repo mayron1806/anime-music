@@ -8,6 +8,7 @@ export const NameContainer = styled.div`
         top:50%;
         transform: translateY(-50%);
         font-size: 1.6rem;
+        font-weight: 600;
         margin-left: 0.5rem;
         color: var(--black);
         transition: .5s;
@@ -16,7 +17,7 @@ export const NameContainer = styled.div`
     input{
         background-color:transparent;   
         border: 1px solid var(--black);
-        border-radius: 3px;
+        border-radius: 5px;
         width:100%;
         height: 100%;
         color:var(--black);
@@ -30,7 +31,7 @@ export const NameContainer = styled.div`
             background-color: var(--white);
         }
         input{
-            border-color: var(--main);
+            border: 2px solid var(--main);
         } 
     }
 `;
