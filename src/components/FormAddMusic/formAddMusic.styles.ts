@@ -17,7 +17,7 @@ const blockForm = (isUploading: boolean) =>{
     }
 }
 export const Form = styled.form<{isUploading: boolean, isActive: boolean}>`
-    z-index: 5;
+    z-index: 10;
     position: absolute;
     right: 0;
     top: 0;
@@ -26,7 +26,7 @@ export const Form = styled.form<{isUploading: boolean, isActive: boolean}>`
     height: 100%;
     min-width: 40vw;
     max-width: 50vw;
-    box-shadow: -4px 0 4px var(--gray);
+    box-shadow: -4px 0 4px var(--transparent);
     transition: .5s;
     transform: translateX(${props => props.isActive ? "0%" : "110%"});
     input[type="text"]{

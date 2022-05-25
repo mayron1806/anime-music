@@ -11,9 +11,9 @@ const mainColor = (props : dropzone) =>{
         return "var(--main)";
     }
     if(props.isDragReject){
-        return "#F53927";
+        return "var(--error)";
     }
-    return "#DBD9D0";
+    return "var(--gray)";
 }
 export const DropContainer = styled.div<dropzone>`
     border: 0.2rem dashed ${props => mainColor(props)};

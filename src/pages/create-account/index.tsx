@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { 
     IoMusicalNotesOutline, 
     IoLogoLinkedin, 
@@ -6,6 +6,9 @@ import {
     IoLogoGoogle
 } from "react-icons/io5";
 import { Input } from "../../components/Input";
+import { AuthContext } from "../../Context/AuthContext";
+import { status } from "../../enums/status";
+import Login from "../../services/Auth";
 
 import * as C from "./createAcc.styles";
 
@@ -14,6 +17,31 @@ export const CreateAccount = () => {
     const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
     const [confirmPassword, setConfirmPassword] = useState<string>("");
+
+    const loginErrorRef = useRef<HTMLParagraphElement | null>(null);
+    const googleErrorRef = useRef<HTMLParagraphElement | null>(null);
+
+    const userContext = useContext(AuthContext);
+
+    const googleLogin = () => {
+        Login.googleLogin()
+        .then((res)=>{
+            if(res.status === status.SUCCESS){
+                userContext.login(res.content);   
+            }
+            else if(res.status === status.ERROR){
+                if(googleErrorRef.current){
+                    googleErrorRef.current.innerHTML = res.message;
+                }
+            }
+        })
+        .catch((error)=>{
+            if(googleErrorRef.current){
+                googleErrorRef.current.innerHTML = error.message;
+            }
+        })
+    }
+    
     return(
         <C.Container>
             <div className="left">
@@ -60,16 +88,19 @@ export const CreateAccount = () => {
                         setValue={setConfirmPassword}
                     />
                     <input type="submit" value="Criar Conta" />
+                    <C.ErrorMessage ref={loginErrorRef}></C.ErrorMessage>
                 </C.Form>
                 <C.OR>OU</C.OR>
-                <C.GoogleLogin>
+                <C.GoogleLogin onClick={() => googleLogin()}>
                     <IoLogoGoogle size={30}/>
                     <p>Login com Google</p>
                 </C.GoogleLogin>
+                <C.ErrorMessage ref={googleErrorRef}></C.ErrorMessage>
                 <a className="login" href="/login">
                     Já tem uma conta?
                 </a>
             </div>
+            
         </C.Container>
     )
 }

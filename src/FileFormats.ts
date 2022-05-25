@@ -1,12 +1,10 @@
-
 const imageFormats = {
     'image/png': [".png"],
     "image/gif": [".gif"],
     "image/jpeg": [".jpg", ".jpeg", ".jfif", ".pjpeg", ".pjp"],
-    "image/svg+xml": [".svg"],
     "image/webp":[".webp"]
 }
-const imageFormatsMessage = "(png, gif, pjg, jpeg, jfif, svg)";
+const imageFormatsMessage = "(png, gif, pjg, jpeg, jfif)";
 const audioFormats = {
     "audio/mpeg": [".mp3"],
     "audio/ogg": [".ogg"],

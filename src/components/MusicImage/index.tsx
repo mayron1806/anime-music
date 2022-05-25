@@ -7,7 +7,7 @@ type props = {music : Music | undefined}
 export const MusicImage = ({music} : props)=>{
     const musicImage = ()=>{
         if(music && music.musicAudioURL){
-            return <img src={music.musicImageURL} alt="music image" />
+            return <C.Image url={music.musicImageURL} />
         }
         return <BsMusicNoteBeamed size={60}/>
     }

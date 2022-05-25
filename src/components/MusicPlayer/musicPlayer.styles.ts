@@ -1,5 +1,4 @@
 import styled from "styled-components"; 
-
 export const Container = styled.div`
     width:100vw;
     height: 10rem;
@@ -10,7 +9,7 @@ export const Container = styled.div`
     "name buttons ."
     "name playback volume";
     align-items:center;
-    background-color:var(--gray);
+    background-color:var(--white);
     padding:1rem;
 `;
 type IconsProps = {
@@ -19,7 +18,7 @@ type IconsProps = {
 const Icons = styled.button<IconsProps>`
     width: 5rem;
     height: 5rem;
-    background-color: var(--gray);
+    background-color: var(--white);
     color: var(--black);
     cursor: ${props=> props.interactable ? "pointer" : "auto"};
     pointer-events: ${(props)=> props.interactable ? "all" : "none"};
@@ -30,6 +29,7 @@ const Icons = styled.button<IconsProps>`
 `;
 // name
 export const MusicName = styled.p`
+    color:var(--black);
     grid-area:name;
     white-space:nowrap;
     width: 20vw;
@@ -61,44 +61,19 @@ export const NextMusic = styled(Icons)`
 export const PlaybackContainer = styled.div`
     grid-area: playback;
     display:flex;
-    justify-content: space-evenly; 
+    justify-content: space-evenly;
+    align-items:center; 
 `;
 export const PlaybackValue = styled.span`
     font-size: 1.6rem;
-`;
-export const PlaybackBar = styled.input`
-    width:80%;
-    &::-webkit-slider-runnable-track{
-        width: 100%;
-        height: 0.1rem;
-        cursor: pointer;
-        
-        background: var(--white);
-    }
-    
-    ::-webkit-slider-thumb {
-        margin-top: -5px;
-    }
 `;
 // volume
 export const VolumeContainer = styled.div`
     grid-area: volume;
     display:flex;
     justify-content: space-evenly; 
+    align-items:center;
 `;
 export const VolumeIcon = styled(Icons)`
 
 `;
-export const VolumeBar = styled.input`
-    width: 80%;
-    &::-webkit-slider-runnable-track{
-        width: 100%;
-        height: 0.1rem;
-        cursor: pointer;
-        background: var(--white);
-    }
-    
-    ::-webkit-slider-thumb {
-        margin-top: -5px;
-    }
-`;  

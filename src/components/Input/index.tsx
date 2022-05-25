@@ -1,5 +1,6 @@
 import React, { Dispatch, useEffect, useRef } from "react";
 import * as C from "./input.styles";
+import { v4 as getID } from 'uuid';
 type props = {
     required? : boolean
     type? :string,
@@ -29,19 +30,19 @@ export const Input = ({inputName ,setValue, reset = false, type = "text", requir
             element.parentElement?.classList.remove("active");
         }
     }
-
+    const id = getID();
     return(
         <C.NameContainer>
-            <label htmlFor="name">{inputName}</label>
+            <label htmlFor={id}>{inputName}</label>
             {
                 required && 
-                <input ref={inputRef} type={type} id="name" name="name" required
+                <input ref={inputRef} type={type} id={id} required
                     onBlur={(e)=> blur(e.target)}
                     onFocus={(e)=> e.target.parentElement?.classList.add("active")} 
                     onChange={(e)=> change(e.target)}
                 />
                 || 
-                <input ref={inputRef} type={type} id="name" name="name"
+                <input ref={inputRef} type={type} id={id}
                     onBlur={(e)=> blur(e.target)}
                     onFocus={(e)=> e.target.parentElement?.classList.add("active")} 
                     onChange={(e)=> change(e.target)}

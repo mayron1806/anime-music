@@ -1,6 +1,6 @@
 import { useAudio } from '../../Hooks/useAudio';
+import { ProgressBar } from '../ProgressBar';
 //icons
-
 import { FaStepBackward, FaStepForward } from "react-icons/fa";
 import {
     BsFillVolumeUpFill, 
@@ -10,7 +10,6 @@ import {
     BsFillPlayFill,
     BsFillPauseFill
 } from "react-icons/bs";
-
 //style
 import * as C from "./musicPlayer.styles";
 //utils
@@ -117,12 +116,12 @@ export const MusicPlayer = ({playlist} : Props) =>{
                 <C.PlaybackValue>
                     {Time.ConvertToTime(player.currentTime)}
                 </C.PlaybackValue>
-                <C.PlaybackBar type="range"
-                    ref={playbackBarRef}
-                    min={0}
-                    max={player.audio.duration.toString()}
-                    value={player.currentTime}
-                    onChange={(e)=>{ player.setCurrentTime(parseInt(e.target.value)) }} 
+                <ProgressBar
+                    width='80%'
+                    min={0} 
+                    max={player.audio.duration} 
+                    current={player.currentTime} 
+                    SetValue={player.setCurrentTime}
                 />
                 <C.PlaybackValue>
                 {
@@ -137,14 +136,14 @@ export const MusicPlayer = ({playlist} : Props) =>{
                 <C.VolumeIcon interactable={musicIsUndefined()} onClick={() => player.setMute()}>
                     {volumeIcon()}
                 </C.VolumeIcon>
-                <C.VolumeBar type="range"
+                <ProgressBar
+                    width='80%'
                     min={0} 
                     max={100} 
-                    value={player.volume} 
-                    onChange={(e)=>player.setVolume(parseInt(e.target.value))} 
+                    current={player.volume} 
+                    SetValue={player.setVolume} 
                 />
             </C.VolumeContainer>
-           
         </C.Container>
     )
 }   

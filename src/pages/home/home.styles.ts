@@ -1,6 +1,19 @@
 import styled from "styled-components";
-
-export const Container = styled.div`
+import defaultBG from "../../images/bg.jpeg";
+type bgProps = {
+  backgroundURL?: string
+}
+const background = ({backgroundURL}: bgProps)=>{
+  if(backgroundURL === undefined){
+    return defaultBG;
+  }
+  return backgroundURL;
+}
+export const Container = styled.div<{backgroundURL? : string}>`
+  background: url(${props=> background(props)});
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
   height: 100vh;
   width: 100vw;
   overflow: hidden;
@@ -15,20 +28,28 @@ export const Container = styled.div`
     align-items: center;
     justify-content: center;
     width: 100%;
-    height: calc(100% - 10rem);
+    height: calc(100% - 20vh);
     gap: 2rem;
   }
 `;
+export const BackgroundBlur = styled.div`
+  height: 100vh;
+  width: 100vw;
+  backdrop-filter: blur(0.5rem);
+`;
+export const Header = styled.header`
+  display: flex;
+  justify-content: space-between;
+  padding-left: 1rem;
+  background-color: var(--white);
+`;
 export const ButtonForm = styled.div`
   cursor: pointer;
-  position: absolute;
-  
   padding: 0.5rem;
   width: 5rem;
   height: 5rem;
-  top:0;
   z-index: 100;
-  right: 0;
+  position: relative;
   &:hover{
     background-color: var(--gray);
   }

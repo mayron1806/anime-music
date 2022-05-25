@@ -123,3 +123,8 @@ export const GoogleLogin = styled.div`
         font-size: 2rem;
     }
 `;
+export const ErrorMessage = styled.p`
+    text-align: center;
+    color: var(--error);
+    font-size: 2rem;
+`;
