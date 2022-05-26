@@ -15,67 +15,62 @@ import * as C from "./musicPlayer.styles";
 //utils
 import { Time } from '../../utils/Time';
 //types 
-import { Playlist } from '../../types/Playlist';
-import { memo, useContext, useEffect, useRef } from 'react';
+import { memo, useCallback, useContext, useEffect, useMemo } from 'react';
 import { CurrentMusicContext } from '../../Context/CurrentMusicContext';
 import { behavior } from '../../enums/behavior';
 
-type Props = {
-    playlist: Playlist | undefined
-}
-export const MusicPlayer = ({playlist} : Props) =>{
-    const player = useAudio();
-    
-    const playbackBarRef = useRef<HTMLInputElement | null>(null);
 
-    const currentMusicContext = useContext(CurrentMusicContext);
+export const MusicPlayer = memo(() =>{
+    const player = useAudio();
+
+    const musicContext = useContext(CurrentMusicContext);
 
     useEffect(()=>{
-        if(playlist === undefined) return;
-        player.setMusic(playlist[currentMusicContext.musicIndex]);
-    }, [playlist])
+        if(musicContext.musics === undefined) return;
+        player.setMusic(musicContext.musics[musicContext.musicIndex]);
+    }, [musicContext.musics])
 
     const changePlayState = () => {
         if(player.audio.paused) return player.play();
         return player.pause();
     }
-
     const nextMusic = () => {
-        if(playlist === undefined) return;
-        const index = currentMusicContext.musicIndex;
-        if(playlist[index + 1]){
-            currentMusicContext.dispatch({behavior: behavior.INCREMENT});
+        if(musicContext.musics === undefined) return;
+        const index = musicContext.musicIndex;
+        if(musicContext.musics[index + 1]){
+            musicContext.dispatch({behavior: behavior.INCREMENT});
         }
         else{
-            currentMusicContext.dispatch({behavior: behavior.RESET});
+            musicContext.dispatch({behavior: behavior.RESET});
         }
     }   
     const previousMusic = () => {
-        if(playlist === undefined) return;
-        const index = currentMusicContext.musicIndex;
-        if(playlist[index - 1]){
-            currentMusicContext.dispatch({behavior: behavior.DECREMENT});
+        if(musicContext.musics === undefined) return;
+        const index = musicContext.musicIndex;
+        if(musicContext.musics[index - 1]){
+            musicContext.dispatch({behavior: behavior.DECREMENT});
         }
         else{
-            currentMusicContext.dispatch({behavior: behavior.MANUAL, value: playlist.length - 1});
+            musicContext.dispatch({behavior: behavior.MANUAL, value: musicContext.musics.length - 1});
         }
     }
+
     useEffect(()=>{
-        if(playlist === undefined) return;
-        player.setMusic(playlist[currentMusicContext.musicIndex]);
+        if(musicContext.musics === undefined) return;
+        player.setMusic(musicContext.musics[musicContext.musicIndex]);
         player.play();
-    }, [currentMusicContext.musicIndex])
+    }, [musicContext.musicIndex])
 
     //events
     player.audio.onended = () => nextMusic();
 
-    const playIcon = () => {
+    const playIcon = useCallback(() => {
         if(player.audio.paused){
             return <BsFillPlayFill size={50}/>
         }
         return <BsFillPauseFill size={50}/>
-    }
-    const volumeIcon = () => {
+    }, [player.audio.paused])
+    const volumeIcon = useCallback(() => {
         const defaultSize = 40;
         if(player.audio.volume >= 0.9){
             return <BsFillVolumeUpFill size={defaultSize} />
@@ -87,20 +82,21 @@ export const MusicPlayer = ({playlist} : Props) =>{
             return <BsFillVolumeOffFill size={defaultSize} />
         }
         return <BsFillVolumeMuteFill size={defaultSize} />
-    } 
+    }, [player.audio.volume])
 
-    const musicIsUndefined = ()=>{
-        if(playlist === undefined) return true;
-        return playlist[currentMusicContext.musicIndex] !== undefined;
-    }
+    const musicIsUndefined = useCallback(() => {
+        if(musicContext.musics === undefined) return true;
+        return musicContext.musics[musicContext.musicIndex] !== undefined;
+    }, [musicContext.musics])
 
-    const musicName = () : string => {
-        if(playlist === undefined) return "";
-        return playlist[currentMusicContext.musicIndex].musicName
-    }
+    const musicName = useMemo(() : string => {
+        if(musicContext.musics === undefined) return "";
+        return musicContext.musics[musicContext.musicIndex].musicName;
+    }, [musicContext.musicIndex, musicContext.musics])
+
     return(
         <C.Container className='player'>
-            <C.MusicName>{musicName()}</C.MusicName>
+            <C.MusicName>{musicName}</C.MusicName>
             <C.ButtonsContainer>
                 <C.previousMusic interactable={musicIsUndefined()} onClick={()=> previousMusic()}>
                     <FaStepBackward id='back' size={40} />
@@ -146,4 +142,4 @@ export const MusicPlayer = ({playlist} : Props) =>{
             </C.VolumeContainer>
         </C.Container>
     )
-}
+})

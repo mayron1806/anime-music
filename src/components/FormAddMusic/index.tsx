@@ -1,4 +1,4 @@
-import { FormEvent, useCallback, useContext, useEffect, useState } from "react"
+import { FormEvent, useCallback, useContext, useEffect, useState, memo } from "react"
 import Music from "../../services/Music";
 import { Upload } from "../Upload";
 
@@ -14,7 +14,7 @@ import { AuthContext } from "../../Context/AuthContext";
 
 type props = {isActive: boolean}
 
-export const FormAddMusic = ({ isActive }: props) => {
+export const FormAddMusic = memo(({ isActive }: props) => {
     const [musicName, setMusicName] = useState<string>("");
     const [uploadingMusic, setUploadingMusic] = useState<boolean>(false);
     const [resetForm, setResetForm] = useState<boolean>(false);
@@ -25,10 +25,6 @@ export const FormAddMusic = ({ isActive }: props) => {
     const setAudioFile = useCallback((file : File | undefined)  => musicFiles.audioFile = file, [musicFiles]);
 
     const authContext = useContext(AuthContext);
-
-    useEffect(()=>{
-        //console.log("render again")
-    })
 
     const submitForm = (e: FormEvent) => {
         e.preventDefault();
@@ -96,4 +92,4 @@ export const FormAddMusic = ({ isActive }: props) => {
             </C.StatusMessage>
         </C.Form>
     )
-}
+})

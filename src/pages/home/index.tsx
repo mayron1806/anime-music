@@ -8,7 +8,7 @@ import { FormAddMusic } from '../../components/FormAddMusic';
 //context
 import { CurrentMusicContext } from '../../Context/CurrentMusicContext';
 //types
-import { Playlist } from '../../types/Playlist';
+import { Musics } from '../../types/Musics';
 import { MusicList } from '../../components/MusicList';
 import { MusicImage } from '../../components/MusicImage';
 import { User } from '../../components/User';
@@ -30,24 +30,19 @@ const reducer = (state: number, {behavior: b ,value = 0} : Crement)=>{
   }
 }
 export const Home = () => {
-  const [playlist, setPlaylist] = useState<Playlist>();
-  const [musicIndex, dispatch] = useReducer(reducer, 0);
-  const musicContext = useMemo(()=> ({musicIndex, dispatch}), [musicIndex]);
+  const [musics, setMusics] = useState<Musics>();
 
   const [formActive, setFormActive] = useState<boolean>(false);
 
-  const getAllMusics = useCallback(async () => {
-    setPlaylist(await Music.getAllMusics());
-  }, []);
+  const [musicIndex, dispatch] = useReducer(reducer, 0);
+  const musicContext = useMemo(()=> ({musicIndex, dispatch, musics}), [musicIndex, musics]);
 
+  const getAllMusics = useCallback(async () => {
+    setMusics(await Music.getAllMusics());
+  }, []);
   useEffect(()=>{
     getAllMusics();
   }, []);
-
-  const currentMusic = () => {
-    if (playlist === undefined) return undefined;
-    return playlist[musicIndex];
-  }
 
   /*if(playlist?.length === 0){
     return(
@@ -70,19 +65,19 @@ export const Home = () => {
     )
   }else{*/
     return(
-      <C.Container backgroundURL={playlist === undefined ? undefined : playlist[musicIndex].musicImageURL}>
+      <C.Container backgroundURL={musics === undefined ? undefined : musics[musicIndex].musicImageURL}>
         <C.BackgroundBlur>
           <CurrentMusicContext.Provider value={musicContext}>
           <C.Header>
               <User />
-              <C.ButtonForm className={formActive ? "active" : ""} onClick={e=> setFormActive(!formActive)} />
+              <C.ButtonForm className={formActive ? "active" : ""} onClick={e=> {setFormActive(state => !state)}} />
             </C.Header>
             <FormAddMusic isActive={formActive} />
             <main>
-              <MusicImage music={currentMusic()}/>
-              <MusicList playlist={playlist} />
+              <MusicImage/>
+              <MusicList />
             </main>
-            <MusicPlayer playlist={playlist}/>
+            <MusicPlayer />
           </CurrentMusicContext.Provider>
         </C.BackgroundBlur>
       </C.Container>

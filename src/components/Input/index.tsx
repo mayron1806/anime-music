@@ -1,6 +1,7 @@
-import React, { Dispatch, useEffect, useRef } from "react";
+import React, { Dispatch, useEffect, useRef, memo } from "react";
 import * as C from "./input.styles";
 import { v4 as getID } from 'uuid';
+
 type props = {
     required? : boolean
     type? :string,
@@ -8,12 +9,9 @@ type props = {
     setValue: Dispatch<React.SetStateAction<string>>,
     reset?: boolean
 }
-export const Input = ({inputName ,setValue, reset = false, type = "text", required = false} : props) => {
+
+export const Input = memo(({inputName ,setValue, reset = false, type = "text", required = false} : props) => {
     const inputRef = useRef<HTMLInputElement | null>(null);
-    
-    useEffect(()=>{
-        console.log("render again");
-    })
 
     useEffect(()=>{
         if(reset && inputRef !== null && inputRef.current != undefined){
@@ -52,7 +50,6 @@ export const Input = ({inputName ,setValue, reset = false, type = "text", requir
                     onChange={(e)=> change(e.target)}
                 />
             }
-           
         </C.NameContainer>
     )
-}
+})

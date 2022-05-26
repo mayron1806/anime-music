@@ -6,13 +6,13 @@ import { collection, addDoc, getDocs } from "firebase/firestore";
 
 // types
 import { Music } from "../types/Music";
-import { Playlist } from "../types/Playlist";
+import { Musics } from "../types/Musics";
 import { Result } from "../types/Result";
 import { status } from "../enums/status";
 
 const getAllMusics = async () => {
     const musicsRef = collection(firestore, "musics");
-    const playlist : Playlist = [];
+    const playlist : Musics = [];
     const res = await getDocs(musicsRef);
     res.forEach(item => {
         playlist.push(item.data() as Music);

@@ -1,3 +1,3 @@
 import { Music } from "./Music"
 
-export type Playlist = Music[]
+export type Musics = Music[]

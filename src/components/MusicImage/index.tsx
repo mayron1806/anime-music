@@ -1,17 +1,17 @@
-import { Music } from "../../types/Music";
 import * as C from "./musicImage.styles";
 import { BsMusicNoteBeamed } from "react-icons/bs";
-import { memo, useEffect } from "react";
-import { Playlist } from "../../types/Playlist";
+import { memo, useContext, useEffect } from "react";
+import { CurrentMusicContext } from "../../Context/CurrentMusicContext";
 
-type props = {music : Music | undefined}
-
-export const MusicImage = memo(({music} : props)=>{
+export const MusicImage = memo(()=>{
+    const musicContext = useContext(CurrentMusicContext);
+  
     const musicImage = () => {
-        if(music && music.musicAudioURL){
-            return <C.Image url={music.musicImageURL} />
-        }
-        return <C.defaultImage><BsMusicNoteBeamed size={150}/></C.defaultImage>
+        if(musicContext.musics === undefined) 
+            return <C.defaultImage><BsMusicNoteBeamed size={150}/></C.defaultImage>
+        
+        const music = musicContext.musics[musicContext.musicIndex];
+        return <C.Image url={music.musicImageURL} />
     }
     return(
         <C.Container>
