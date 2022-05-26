@@ -16,8 +16,9 @@ import * as C from "./musicPlayer.styles";
 import { Time } from '../../utils/Time';
 //types 
 import { Playlist } from '../../types/Playlist';
-import { useContext, useEffect, useRef } from 'react';
+import { memo, useContext, useEffect, useRef } from 'react';
 import { CurrentMusicContext } from '../../Context/CurrentMusicContext';
+import { behavior } from '../../enums/behavior';
 
 type Props = {
     playlist: Playlist | undefined
@@ -31,7 +32,7 @@ export const MusicPlayer = ({playlist} : Props) =>{
 
     useEffect(()=>{
         if(playlist === undefined) return;
-        player.setMusic(playlist[currentMusicContext.currentMusicIndex]);
+        player.setMusic(playlist[currentMusicContext.musicIndex]);
     }, [playlist])
 
     const changePlayState = () => {
@@ -41,31 +42,30 @@ export const MusicPlayer = ({playlist} : Props) =>{
 
     const nextMusic = () => {
         if(playlist === undefined) return;
-        const index = currentMusicContext.currentMusicIndex;
+        const index = currentMusicContext.musicIndex;
         if(playlist[index + 1]){
-            currentMusicContext.setCurrentMusicIndex(index + 1);
+            currentMusicContext.dispatch({behavior: behavior.INCREMENT});
         }
         else{
-            currentMusicContext.setCurrentMusicIndex(0);
+            currentMusicContext.dispatch({behavior: behavior.RESET});
         }
     }   
     const previousMusic = () => {
         if(playlist === undefined) return;
-        const index = currentMusicContext.currentMusicIndex;
+        const index = currentMusicContext.musicIndex;
         if(playlist[index - 1]){
-            currentMusicContext.setCurrentMusicIndex(index - 1);
+            currentMusicContext.dispatch({behavior: behavior.DECREMENT});
         }
         else{
-            currentMusicContext.setCurrentMusicIndex(playlist.length - 1);
+            currentMusicContext.dispatch({behavior: behavior.MANUAL, value: playlist.length - 1});
         }
     }
     useEffect(()=>{
         if(playlist === undefined) return;
-        player.setMusic(playlist[currentMusicContext.currentMusicIndex]);
+        player.setMusic(playlist[currentMusicContext.musicIndex]);
         player.play();
-    }, [currentMusicContext.currentMusicIndex])
+    }, [currentMusicContext.musicIndex])
 
-    const a = ()=>{console.log("a")}
     //events
     player.audio.onended = () => nextMusic();
 
@@ -91,12 +91,12 @@ export const MusicPlayer = ({playlist} : Props) =>{
 
     const musicIsUndefined = ()=>{
         if(playlist === undefined) return true;
-        return playlist[currentMusicContext.currentMusicIndex] !== undefined;
+        return playlist[currentMusicContext.musicIndex] !== undefined;
     }
 
     const musicName = () : string => {
         if(playlist === undefined) return "";
-        return playlist[currentMusicContext.currentMusicIndex].musicName
+        return playlist[currentMusicContext.musicIndex].musicName
     }
     return(
         <C.Container className='player'>
@@ -146,4 +146,4 @@ export const MusicPlayer = ({playlist} : Props) =>{
             </C.VolumeContainer>
         </C.Container>
     )
-}   
+}

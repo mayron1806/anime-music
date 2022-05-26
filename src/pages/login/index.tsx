@@ -32,19 +32,20 @@ export const Login = ()=>{
                     googleErrorRef.current.innerHTML = res.message;
                 }
             }
-            console.log("ok")
         })
         .catch((error)=>{
             if(googleErrorRef.current){
                 googleErrorRef.current.innerHTML = error.message;
             }
-        })
-        
+        })   
+    }
+    const redirectToHome = ()=>{
+        window.location.href = "/";
     }
     return(
         <C.Container>
             <div className="left">
-                <C.SiteInfo>
+                <C.SiteInfo onClick={()=>redirectToHome()}>
                     <IoMusicalNotesOutline size={140}/>
                     <C.Title>Anime Music</C.Title>
                 </C.SiteInfo>

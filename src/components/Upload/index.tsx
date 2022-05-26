@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, memo } from "react";
 import {FileRejection, useDropzone} from "react-dropzone";
 import { IoDocumentOutline, IoHandLeftOutline, IoCheckmarkCircleOutline } from "react-icons/io5"
 import { setCommentRange } from "typescript";
@@ -13,7 +13,7 @@ type props = {
     maxSize?: number
 }
 
-export const Upload = ({setFile, accept, acceptedFilesMessage,maxSize = 0.5}: props)=>{
+export const Upload = memo(({setFile, accept, acceptedFilesMessage,maxSize = 0.5}: props)=>{
     const [currentFile, setCurrentFile] = useState<File>();
     const {
         acceptedFiles,
@@ -28,7 +28,6 @@ export const Upload = ({setFile, accept, acceptedFilesMessage,maxSize = 0.5}: pr
         onDropAccepted: (file) => dropAccepted(file),
         onDropRejected: () => dropRejected()
     });
-    
     const dropAccepted = (file : File[])=>{
         setisAcceptFile(true);
         setCurrentFile(file[0]);
@@ -86,4 +85,4 @@ export const Upload = ({setFile, accept, acceptedFilesMessage,maxSize = 0.5}: pr
             {dropZoneContent()}
         </C.DropContainer>
     )
-}   
+})

@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useEffect, memo } from "react";
 import { CurrentMusicContext } from "../../Context/CurrentMusicContext";
 import { Playlist } from "../../types/Playlist";
 import { MusicItem } from "../MusicItem";
@@ -7,15 +7,16 @@ import {RiEmotionSadLine} from "react-icons/ri"
 type props = {
     playlist: Playlist | undefined
 }
-export const MusicList = ({playlist}: props)=>{
+export const MusicList = memo(({playlist}: props)=>{
     const currentMusicContext = useContext(CurrentMusicContext);
+    
     return(
         <C.Container>
             <C.Header>
                 <h2>Musicas</h2>
                 {
                     playlist !== undefined && 
-                    <p>{currentMusicContext.currentMusicIndex + 1}/{playlist?.length}</p>
+                    <p>{currentMusicContext.musicIndex + 1}/{playlist?.length}</p>
                 }
             </C.Header>
             <C.MusicsContainer>
@@ -33,4 +34,4 @@ export const MusicList = ({playlist}: props)=>{
             </C.MusicsContainer>
         </C.Container>
     )
-}
+})

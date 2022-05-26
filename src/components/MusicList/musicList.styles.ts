@@ -5,9 +5,10 @@ export const Container = styled.div`
     height: 100%;
     display: flex;
     flex-direction: column;
+    padding-bottom: 1rem;
+    background-color: var(--white);
 `;
 export const Header = styled.header`
-    background-color: var(--white);
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -19,7 +20,6 @@ export const Header = styled.header`
     }
 `;
 export const MusicsContainer = styled.div`
-    background-color: var(--white);
     padding-bottom: 1rem;
     overflow-y:scroll;
     display: flex;

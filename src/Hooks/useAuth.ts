@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import { User } from "../types/User"
 
 export const useAuth = () => {
-    const [user, setUser] = useState<User | undefined>({} as User);
+    const [user, setUser] = useState<User>();
     const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
 
     useEffect(()=>{

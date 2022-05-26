@@ -1,7 +1,8 @@
-import React, { createContext, Dispatch } from "react";
-import { Music } from "../types/Music";
-type currentMusicIndex = {
-    currentMusicIndex: number,
-    setCurrentMusicIndex: Dispatch<React.SetStateAction<number>>
+import React, { createContext } from "react";
+import { Crement } from "../types/Crement";
+type musicIndexProps = {
+    musicIndex: number,
+    dispatch: React.Dispatch<Crement>
 }
-export const CurrentMusicContext = createContext<currentMusicIndex>({} as currentMusicIndex)
+
+export const CurrentMusicContext = createContext<musicIndexProps>({} as musicIndexProps)

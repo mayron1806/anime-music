@@ -16,6 +16,7 @@ export const User = () => {
     const logOut = () => {
         Login.logout();
         authContext.logOut();
+        window.location.href = "/login";
     }
     const userImage = ()=>{
         if(authContext.user !== undefined && authContext.user.displayName !== null){

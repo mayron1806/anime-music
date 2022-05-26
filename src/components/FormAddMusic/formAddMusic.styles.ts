@@ -1,4 +1,5 @@
 import styled, { keyframes } from "styled-components";
+import { status } from "../../enums/status";
 
 const blockForm = (isUploading: boolean) =>{
     if(isUploading){
@@ -104,4 +105,17 @@ export const submitAnim = styled.div`
         background-color: var(--main);
     }
 
+`;
+
+const setColorByStatus = (s : status) => {
+    if(s === status.ERROR){
+        return "var(--error)";
+    }
+    return "var(--main)";
+}
+export const StatusMessage = styled.p<{status : status}>`
+    margin-top: 2rem;
+    color: ${(props) => setColorByStatus(props.status)};
+    font-size: 1.6rem;
+    text-align: center;
 `;

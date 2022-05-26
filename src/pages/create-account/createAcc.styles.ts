@@ -38,6 +38,7 @@ export const SiteInfo = styled.div`
     flex-direction: column;
     align-items: center;
     gap: 1rem;
+    cursor: pointer;
 `;  
 export const Title = styled.h2`
     font-size: 4rem;

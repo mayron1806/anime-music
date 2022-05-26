@@ -41,11 +41,14 @@ export const CreateAccount = () => {
             }
         })
     }
+    const redirectToHome = ()=>{
+        window.location.href = "/";
+    }
     
     return(
         <C.Container>
             <div className="left">
-                <C.SiteInfo>
+                <C.SiteInfo onClick={()=>redirectToHome()}>
                     <IoMusicalNotesOutline size={140}/>
                     <C.Title>Anime Music</C.Title>
                 </C.SiteInfo>

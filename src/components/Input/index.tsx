@@ -12,6 +12,10 @@ export const Input = ({inputName ,setValue, reset = false, type = "text", requir
     const inputRef = useRef<HTMLInputElement | null>(null);
     
     useEffect(()=>{
+        console.log("render again");
+    })
+
+    useEffect(()=>{
         if(reset && inputRef !== null && inputRef.current != undefined){
            inputRef.current.value = "";    
         }

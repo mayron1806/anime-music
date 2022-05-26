@@ -1,9 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useReducer, useState } from 'react';
 
 import * as C from "./home.styles";
 import Music from '../../services/Music';
-
-
 // components
 import { MusicPlayer } from '../../components/MusicPlayer';
 import { FormAddMusic } from '../../components/FormAddMusic';
@@ -14,44 +12,68 @@ import { Playlist } from '../../types/Playlist';
 import { MusicList } from '../../components/MusicList';
 import { MusicImage } from '../../components/MusicImage';
 import { User } from '../../components/User';
+import { behavior } from '../../enums/behavior';
+import { Crement } from '../../types/Crement';
+import { useCallback } from 'react';
 
+
+const reducer = (state: number, {behavior: b ,value = 0} : Crement)=>{
+  switch(b){
+    case behavior.DECREMENT:
+      return state - 1;
+    case behavior.INCREMENT:
+      return state + 1;
+    case behavior.RESET:
+      return 0;
+    case behavior.MANUAL:
+      return value;
+  }
+}
 export const Home = () => {
   const [playlist, setPlaylist] = useState<Playlist>();
-  const [currentMusicIndex, setCurrentMusicIndex] = useState<number>(0);
+  const [musicIndex, dispatch] = useReducer(reducer, 0);
+  const musicContext = useMemo(()=> ({musicIndex, dispatch}), [musicIndex]);
+
   const [formActive, setFormActive] = useState<boolean>(false);
 
+  const getAllMusics = useCallback(async () => {
+    setPlaylist(await Music.getAllMusics());
+  }, []);
+
   useEffect(()=>{
-    const getAllMusics = async () => {
-      setPlaylist(await Music.getAllMusics());
-    }
     getAllMusics();
   }, []);
-  
-  const currentMusic = ()=>{
+
+  const currentMusic = () => {
     if (playlist === undefined) return undefined;
-    return playlist[currentMusicIndex];
+    return playlist[musicIndex];
   }
-  if(playlist?.length === 0){
+
+  /*if(playlist?.length === 0){
     return(
       <C.Container backgroundURL={undefined}>
-        <CurrentMusicContext.Provider value={{currentMusicIndex, setCurrentMusicIndex}}>
-          <User />
-          <C.ButtonForm className={formActive ? "active" : ""} onClick={e=> setFormActive(!formActive)} />
-          <FormAddMusic isActive={formActive} />
-          <main>
-            <MusicImage music={currentMusic()}/>
-            <MusicList playlist={undefined} />
-          </main>
-          <MusicPlayer playlist={undefined} />
-        </CurrentMusicContext.Provider>
+        <C.BackgroundBlur>
+          <CurrentMusicContext.Provider value={musicContext}>
+            <C.Header>
+              <User />
+              <C.ButtonForm className={formActive ? "active" : ""} onClick={e=> setFormActive(!formActive)} />
+            </C.Header>
+            <FormAddMusic isActive={formActive} />
+            <main>
+              <MusicImage music={currentMusic()} playlist={playlist}/>
+              <MusicList playlist={undefined} />
+            </main>
+            <MusicPlayer playlist={undefined} />
+          </CurrentMusicContext.Provider>
+        </C.BackgroundBlur>
       </C.Container>
     )
-  }else{
+  }else{*/
     return(
-      <C.Container backgroundURL={playlist === undefined ? undefined : playlist[currentMusicIndex].musicImageURL}>
+      <C.Container backgroundURL={playlist === undefined ? undefined : playlist[musicIndex].musicImageURL}>
         <C.BackgroundBlur>
-          <CurrentMusicContext.Provider value={{currentMusicIndex, setCurrentMusicIndex}}>
-            <C.Header>
+          <CurrentMusicContext.Provider value={musicContext}>
+          <C.Header>
               <User />
               <C.ButtonForm className={formActive ? "active" : ""} onClick={e=> setFormActive(!formActive)} />
             </C.Header>
@@ -60,11 +82,10 @@ export const Home = () => {
               <MusicImage music={currentMusic()}/>
               <MusicList playlist={playlist} />
             </main>
-            
-            <MusicPlayer playlist={playlist} />
+            <MusicPlayer playlist={playlist}/>
           </CurrentMusicContext.Provider>
         </C.BackgroundBlur>
       </C.Container>
     )
-  }
+  //}
 }

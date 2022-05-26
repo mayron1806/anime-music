@@ -9,14 +9,14 @@ export const NameContainer = styled.div`
         transform: translateY(-50%);
         font-size: 1.6rem;
         font-weight: 600;
-        margin-left: 0.5rem;
-        color: var(--black);
+        margin-left: 1rem;
+        color: var(--gray);
         transition: .5s;
         cursor: text;
     }
     input{
         background-color:transparent;   
-        border: 1px solid var(--black);
+        border: 1px solid var(--gray);
         border-radius: 5px;
         width:100%;
         height: 100%;
@@ -29,6 +29,9 @@ export const NameContainer = styled.div`
         label{
             top: 0;
             background-color: var(--white);
+            color: var(--black);
+            margin-left: 0.5rem;
+            font-size: 1.8rem;
         }
         input{
             border: 2px solid var(--main);

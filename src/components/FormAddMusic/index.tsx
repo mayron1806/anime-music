@@ -1,4 +1,4 @@
-import { FormEvent, useRef, useState } from "react"
+import { FormEvent, useCallback, useContext, useEffect, useState } from "react"
 import Music from "../../services/Music";
 import { Upload } from "../Upload";
 
@@ -9,35 +9,50 @@ import { MusicFiles } from "../../types/Music";
 import * as C from "./formAddMusic.styles";
 import { Result } from "../../types/Result";
 import { status } from "../../enums/status";
-import { StatusMessage } from "../StatusMessage";
 import { Input } from "../Input";
+import { AuthContext } from "../../Context/AuthContext";
 
-type props = {isActive:boolean}
+type props = {isActive: boolean}
 
 export const FormAddMusic = ({ isActive }: props) => {
     const [musicName, setMusicName] = useState<string>("");
     const [uploadingMusic, setUploadingMusic] = useState<boolean>(false);
     const [resetForm, setResetForm] = useState<boolean>(false);
-    const [statusMessage, setStatusMessage] = useState<Result>({status: status.DEFAULT, message:""});
-
+    const [statusMessage, setStatusMessage] = useState<Result>({status: status.ERROR, message:""});
+    
     const [musicFiles] = useState<MusicFiles>({} as MusicFiles);
-    const setImageFile = (file : File | undefined) => musicFiles.imageFile = file;
-    const setAudioFile = (file : File | undefined)  => musicFiles.audioFile = file;
+    const setImageFile = useCallback((file : File | undefined) => musicFiles.imageFile = file, [musicFiles]);
+    const setAudioFile = useCallback((file : File | undefined)  => musicFiles.audioFile = file, [musicFiles]);
+
+    const authContext = useContext(AuthContext);
+
+    useEffect(()=>{
+        //console.log("render again")
+    })
 
     const submitForm = (e: FormEvent) => {
         e.preventDefault();
-        const addMusic = async()=>{
-            setResetForm(false);
-            setUploadingMusic(true);
-            const res = await Music.sendMusic(musicFiles.audioFile, musicFiles.imageFile, musicName)
-            setStatusMessage(res);
-            setUploadingMusic(false);
-            // quando true os elemtos do formulario irao resetar
-            setResetForm(true);
-            setImageFile(undefined);
-            setAudioFile(undefined);
+        if(authContext.user?.adm){
+            const addMusic = async()=>{
+                setResetForm(false);
+                setUploadingMusic(true);
+                const res = await Music.sendMusic(musicFiles.audioFile, musicFiles.imageFile, musicName)
+                setStatusMessage(res);
+                setUploadingMusic(false);
+                // quando true os elemtos do formulario irao resetar
+                setResetForm(true);
+                setImageFile(undefined);
+                setAudioFile(undefined);
+            }
+            addMusic();
         }
-        addMusic();
+        else{
+            setStatusMessage({
+                status: status.ERROR,
+                message: "Você precisa ter autorização para adicionar uma musica."
+            })
+        }
+       
     }
     return( 
         <C.Form
@@ -54,7 +69,7 @@ export const FormAddMusic = ({ isActive }: props) => {
             />
             <C.FileContainer>
                 <Upload 
-                    maxSize={0.2} 
+                    maxSize={0.4} 
                     setFile={setImageFile}
                     accept={FileFormats.imageFormats} 
                     acceptedFilesMessage={FileFormats.imageFormatsMessage}
@@ -76,8 +91,9 @@ export const FormAddMusic = ({ isActive }: props) => {
                 />
                 <C.submitAnim />
             </C.SubmitContainer>
-            
-            <StatusMessage statusMessage={statusMessage} />
+            <C.StatusMessage status={statusMessage.status}>
+                {statusMessage.message}
+            </C.StatusMessage>
         </C.Form>
     )
 }
