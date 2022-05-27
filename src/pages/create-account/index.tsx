@@ -46,26 +46,24 @@ export const CreateAccount = () => {
     }
     return(
         <C.Container>
-            <div className="left">
-                <C.SiteInfo onClick={() => redirectToHome()}>
-                    <IoMusicalNotesOutline size={140}/>
-                    <C.Title>Anime Music</C.Title>
-                </C.SiteInfo>
-                <C.ContactArea>
-                    <p>Quer conhecer o criador?</p>
-                    <div className="link-area">
-                        <C.Link href="https://www.linkedin.com/in/mayron-fernandes/" target="_blank">
-                            <IoLogoLinkedin size={60}/>
-                        </C.Link>
-                        <C.Link href="https://github.com/mayron1806" target="_blank">
-                            <IoLogoGithub size={60}/>
-                        </C.Link>
-                    </div>
-                </C.ContactArea>
-            </div>
-            <div className="right">
+            <C.SiteInfo onClick={() => redirectToHome()}>
+                <IoMusicalNotesOutline className="app-icon" size={100}/>
+                <C.Title>Anime Music</C.Title>
+            </C.SiteInfo>
+            <C.ContactArea>
+                <p>Quer conhecer o criador?</p>
+                <div className="link-area">
+                    <C.Link href="https://www.linkedin.com/in/mayron-fernandes/" target="_blank">
+                        <IoLogoLinkedin size={60}/>
+                    </C.Link>
+                    <C.Link href="https://github.com/mayron1806" target="_blank">
+                        <IoLogoGithub size={60}/>
+                    </C.Link>
+                </div>
+            </C.ContactArea>
+            <main>
                 <C.Form onSubmit={(e)=> createAccount(e)}>
-                    <C.Title className="title">Login</C.Title>
+                    <C.FormTitle className="title">Criar conta</C.FormTitle>
                     <Input 
                         required={true}
                         inputName="Nome de usuário:" 
@@ -101,7 +99,7 @@ export const CreateAccount = () => {
                 <a className="login" href="/login">
                     Já tem uma conta?
                 </a>
-            </div>
+            </main>
             
         </C.Container>
     )
