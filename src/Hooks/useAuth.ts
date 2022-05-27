@@ -1,31 +1,42 @@
 import { useEffect, useState } from "react"
 import { User } from "../types/User"
+import { 
+    getAuth,
+    onAuthStateChanged,
+} from "firebase/auth";
+import { app } from "../services/firebase";
+import { firestore } from "../services/firebase";
+import { doc, getDoc } from "firebase/firestore";
+
+const firebaseApp = app;
+
+const auth = getAuth();
 
 export const useAuth = () => {
     const [user, setUser] = useState<User>();
-    const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
-
     useEffect(()=>{
-        const userSTR = localStorage.getItem("user");
-        // has user
-        if(userSTR !== null){
-          setUser(JSON.parse(userSTR) as User);
-          setIsAuthenticated(true);
-        }
+        onAuthStateChanged(auth, (user)=>{
+            // se user for diferente de null significa que tem um usuario logado
+            if(user){
+                const u : User = {
+                    uid: user.uid,
+                    displayName: user.displayName,
+                    email: user.email
+                }
+                // verifica se o user é adm
+                const userFirestoreRef = doc(firestore, `users/${user.uid}`);
+                getDoc(userFirestoreRef)
+                .then((res)=>{
+                    u.adm = res.data()?.adm;
+                })
+                setUser(u);
+            }else{
+                setUser(undefined);
+            }
+        })
     }, [])
-    const logOut = () => {
-        localStorage.removeItem("user");
-        setUser(undefined);
-        setIsAuthenticated(false);
-    }
-    const login = (user: User)=>{
-        if(user !== undefined){
-            setUser(user);
-            localStorage.setItem("user", JSON.stringify(user));
-            setIsAuthenticated(true);
-            window.location.href = "/";
-        }
-
-    }
-    return{user, isAuthenticated, logOut, login}
+    
+    return {
+        user
+    };
 }

@@ -1,4 +1,4 @@
-import { useContext, useState, useRef } from "react";
+import { useContext, useState, useRef, FormEvent } from "react";
 import { 
     IoMusicalNotesOutline, 
     IoLogoLinkedin, 
@@ -8,12 +8,11 @@ import {
 
 import { Input } from "../../components/Input";
 import Auth from "../../services/Auth";
-import { status } from "../../enums/status";
 import * as C from "./login.styles";
 import { AuthContext } from "../../Context/AuthContext";
 
 export const Login = ()=>{
-    const [name, setName] = useState<string>("");
+    const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
 
     const userContext = useContext(AuthContext);
@@ -21,23 +20,23 @@ export const Login = ()=>{
     const loginErrorRef = useRef<HTMLParagraphElement | null>(null);
     const googleErrorRef = useRef<HTMLParagraphElement | null>(null);
 
-    const googleLogin = () => {
-        Auth.googleLogin()
-        .then((res)=>{
-            if(res.status === status.SUCCESS){
-                userContext.login(res.content);
-            }
-            else if(res.status === status.ERROR){
-                if(googleErrorRef.current){
-                    googleErrorRef.current.innerHTML = res.message;
-                }
+    const loginWithEmailAndPassword = (e: FormEvent)=>{
+        e.preventDefault();
+
+        Auth.login(email, password, "/")
+        .catch(error => {
+            console.log(error)
+            if(loginErrorRef.current){
+                loginErrorRef.current.innerHTML = error.message;
             }
         })
-        .catch((error)=>{
-            if(googleErrorRef.current){
-                googleErrorRef.current.innerHTML = error.message;
-            }
-        })   
+    }
+
+    const googleLogin = () => {
+        Auth.googleLogin("/")
+        .catch(error => {
+            console.log(error);
+        })  
     }
     const redirectToHome = ()=>{
         window.location.href = "/";
@@ -45,7 +44,7 @@ export const Login = ()=>{
     return(
         <C.Container>
             <div className="left">
-                <C.SiteInfo onClick={()=>redirectToHome()}>
+                <C.SiteInfo onClick={() => redirectToHome()}>
                     <IoMusicalNotesOutline size={140}/>
                     <C.Title>Anime Music</C.Title>
                 </C.SiteInfo>
@@ -62,11 +61,12 @@ export const Login = ()=>{
                 </C.ContactArea>
             </div>
             <div className="right">
-                <C.Form>
+                <C.Form onSubmit={e=> loginWithEmailAndPassword(e)}>
                     <C.Title className="title">Login</C.Title>
                     <Input 
-                        inputName="Nome de usuário:" 
-                        setValue={setName}
+                        type="email"
+                        inputName="Email:" 
+                        setValue={setEmail}
                     />
                     <Input 
                         type="password"

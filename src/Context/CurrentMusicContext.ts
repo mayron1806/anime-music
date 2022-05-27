@@ -7,5 +7,4 @@ type musicIndexProps = {
     musics?: Musics
 }
 
-
 export const CurrentMusicContext = createContext<musicIndexProps>({} as musicIndexProps)

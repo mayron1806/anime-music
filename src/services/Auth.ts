@@ -1,56 +1,75 @@
-import { GoogleAuthProvider, getAuth, signInWithPopup } from "firebase/auth";
-import { setDoc, doc, getDoc } from "firebase/firestore";
-import { status } from "../enums/status";
-import { Result } from "../types/Result";
-import { User } from "../types/User";
-import {app, firestore} from "./firebase";
-
+import { app } from "./firebase";
+import { 
+    GoogleAuthProvider, 
+    getAuth, 
+    signInWithPopup, 
+    createUserWithEmailAndPassword, 
+    signOut, 
+    updateProfile,
+    signInWithEmailAndPassword
+} from "firebase/auth";
 
 const firebaseApp = app;
-const provider = new GoogleAuthProvider();
-const auth = getAuth();
 
-
-const googleLogin = async() => {
-    const res : Result = {} as Result
-    await signInWithPopup(auth, provider)
-    .then((result)=>{
-        const u = result.user;
-        const user : User = {
-            uid: u.uid,
-            displayName: u.displayName,
-            email: u.email, 
-            adm: false
-        }
-        res.content = user;
-        res.status = status.SUCCESS;
-    })
-    .catch((error)=>{
-        res.message = "Erro ao realizar Login";
-        res.status = status.ERROR;
-    })
-    // se aconteceu qualquer erro na autenticação esse erro é retornado aqui
-    if(res.status === status.ERROR) return res;
-    
-    // referencia ao usuario no banco 
-    const userRef = doc(firestore, `users/${res.content.uid}`);
-    
-    // verifica se tem um usuario com a referencia acima no banco
-    const userSnap = await getDoc(userRef);
-    if(userSnap.exists()){
-        const user = userSnap.data()
-        res.content = user;
-        return res;
-    }
-    //caso nao tenha esse usuario no banco ele sera adicionado
-    await setDoc(userRef, res.content);
-    return res;
+const redirectTo = (url: string) => {
+    window.location.href = url;
 }
+const createAccount = async(name: string, email: string, password: string, redirectURL?: string) => {
+    const auth = getAuth();
+    await createUserWithEmailAndPassword(auth, email, password)
+    .then((user) => {
+        if(auth.currentUser){
+            updateProfile(auth.currentUser, {displayName: name})
+            .then(()=>{
+                if(redirectURL) redirectTo(redirectURL);
+            })
+            .catch(error => {
+                throw new Error(error);
+            })
+        }
+    })
+    .catch(error=>{
+        throw new Error(error);
+    })
+}
+const login = async (email: string, password: string, redirectURL?: string) => {
+    const auth = getAuth();
+    await signInWithEmailAndPassword(auth, email, password)
+    .then(()=>{
+        if(redirectURL) redirectTo(redirectURL);
+    })
+    .catch((error: Error) => {
+        const errorMessage : string = error.message.toLowerCase();
+        if(errorMessage.includes("user-not-found")){
+            throw new Error("Usuário não encontrado.");
+        }
+        if(errorMessage.includes("wrong-password")){
+            throw new Error("A senha está incorreta.");
+        }
+        throw new Error(error.message);
+    })
+}
+
+const googleLogin = async(redirectURL?: string) => {
+    const provider = new GoogleAuthProvider();
+    const auth = getAuth();
+    await signInWithPopup(auth, provider)
+    .then(()=>{
+        if(redirectURL) redirectTo(redirectURL);
+    })
+    .catch((error)=> {
+        throw new Error(error);
+    })
+}
+
 const logout = ()=>{
     const auth = getAuth();
-    auth.signOut();
+    signOut(auth);
 }
+
 export default {
+    createAccount,
+    login,
     googleLogin,
     logout
 }

@@ -1,6 +1,6 @@
 import { useContext, useRef } from "react";
 import { AuthContext } from "../../Context/AuthContext";
-import Login from "../../services/Auth";
+import Auth from "../../services/Auth";
 import * as C from "./user.styles";
 
 export const User = () => {
@@ -14,15 +14,14 @@ export const User = () => {
         }
     }
     const logOut = () => {
-        Login.logout();
-        authContext.logOut();
+        Auth.logout();
         window.location.href = "/login";
     }
     const userImage = ()=>{
-        if(authContext.user !== undefined && authContext.user.displayName !== null){
+        if(authContext.user !== undefined){
             return (
                 <C.UserContent ref={exitRef}>
-                    <C.Title onClick={()=>userClick()}>{authContext.user.displayName}</C.Title>
+                    <C.Title onClick={()=>userClick()}>{authContext.user.displayName ?? "user"}</C.Title>
                     <C.Exit>
                         <button onClick={()=>logOut()} className="exit-button">Sair</button>
                     </C.Exit>

@@ -1,10 +1,7 @@
-import React, { createContext, Dispatch } from "react";
+import { createContext } from "react";
 import { User } from "../types/User";
 
 type props = {
-    user: User | undefined,
-    isAuthenticated: boolean,
-    logOut: () => void,
-    login: (user: User)=> void
+    user: User | undefined
 }
-export const AuthContext = createContext<props>({} as props);
+export const AuthContext = createContext<props>({user: undefined});

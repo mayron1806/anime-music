@@ -1,4 +1,4 @@
-import { useContext, useEffect, useRef, useState } from "react";
+import { FormEvent, useRef, useState } from "react";
 import { 
     IoMusicalNotesOutline, 
     IoLogoLinkedin, 
@@ -6,9 +6,9 @@ import {
     IoLogoGoogle
 } from "react-icons/io5";
 import { Input } from "../../components/Input";
-import { AuthContext } from "../../Context/AuthContext";
 import { status } from "../../enums/status";
-import Login from "../../services/Auth";
+import Auth from "../../services/Auth";
+import Validator from "../../utils/Validator";
 
 import * as C from "./createAcc.styles";
 
@@ -16,39 +16,38 @@ export const CreateAccount = () => {
     const [name, setName] = useState<string>("");
     const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
-    const [confirmPassword, setConfirmPassword] = useState<string>("");
+    const [confirm_password, setConfirmPassword] = useState<string>("");
 
-    const loginErrorRef = useRef<HTMLParagraphElement | null>(null);
+    const createAccErrorRef = useRef<HTMLParagraphElement | null>(null);
     const googleErrorRef = useRef<HTMLParagraphElement | null>(null);
 
-    const userContext = useContext(AuthContext);
-
     const googleLogin = () => {
-        Login.googleLogin()
-        .then((res)=>{
-            if(res.status === status.SUCCESS){
-                userContext.login(res.content);   
-            }
-            else if(res.status === status.ERROR){
-                if(googleErrorRef.current){
-                    googleErrorRef.current.innerHTML = res.message;
-                }
-            }
-        })
-        .catch((error)=>{
-            if(googleErrorRef.current){
-                googleErrorRef.current.innerHTML = error.message;
-            }
+        Auth.googleLogin("/")
+        .catch(error => {
+            console.log(error);
         })
     }
-    const redirectToHome = ()=>{
-        window.location.href = "/";
+    const createAccount = (e: FormEvent) => {
+        e.preventDefault();
+
+        const valodationResult = Validator.validateCreateAccount(name, email, password, confirm_password);
+        if(valodationResult.status === status.ERROR){
+            if(createAccErrorRef.current){
+                createAccErrorRef.current.innerHTML = valodationResult.message;
+            }
+            return;
+        }
+        // criar conta
+        const createAccountResult = Auth.createAccount(name, email, password, "/");
     }
     
+    const redirectToHome = () => {
+        window.location.href = "/";
+    }
     return(
         <C.Container>
             <div className="left">
-                <C.SiteInfo onClick={()=>redirectToHome()}>
+                <C.SiteInfo onClick={() => redirectToHome()}>
                     <IoMusicalNotesOutline size={140}/>
                     <C.Title>Anime Music</C.Title>
                 </C.SiteInfo>
@@ -65,7 +64,7 @@ export const CreateAccount = () => {
                 </C.ContactArea>
             </div>
             <div className="right">
-                <C.Form>
+                <C.Form onSubmit={(e)=> createAccount(e)}>
                     <C.Title className="title">Login</C.Title>
                     <Input 
                         required={true}
@@ -76,7 +75,7 @@ export const CreateAccount = () => {
                         required={true}
                         type="email"
                         inputName="Email:" 
-                        setValue={setName}
+                        setValue={setEmail}
                     />
                     <Input 
                         required={true}
@@ -91,7 +90,7 @@ export const CreateAccount = () => {
                         setValue={setConfirmPassword}
                     />
                     <input type="submit" value="Criar Conta" />
-                    <C.ErrorMessage ref={loginErrorRef}></C.ErrorMessage>
+                    <C.ErrorMessage ref={createAccErrorRef}></C.ErrorMessage>
                 </C.Form>
                 <C.OR>OU</C.OR>
                 <C.GoogleLogin onClick={() => googleLogin()}>
