@@ -30,6 +30,15 @@ export const Container = styled.div<{backgroundURL? : string}>`
     width: 100%;
     height: calc(100% - 20vh);
     gap: 2rem;
+    @media (max-width: 600px) {
+      flex-direction: column;
+      gap: 1rem;
+      padding: 1rem;
+      justify-content: stretch;
+    }
+    @media (max-width: 500px) {
+      padding: 1rem;
+    }
   }
 `;
 export const BackgroundBlur = styled.div`

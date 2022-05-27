@@ -25,8 +25,7 @@ export const Form = styled.form<{isUploading: boolean, isActive: boolean}>`
     background-color: var(--white);
     padding: 1rem;
     height: 100%;
-    min-width: 40vw;
-    max-width: 50vw;
+    width: 50vw;
     box-shadow: -4px 0 4px var(--transparent);
     transition: .5s;
     transform: translateX(${props => props.isActive ? "0%" : "110%"});
@@ -34,6 +33,12 @@ export const Form = styled.form<{isUploading: boolean, isActive: boolean}>`
         pointer-events: ${props => props.isUploading ? "none" : "initial"};
     }
     ${props => blockForm(props.isUploading)}
+    @media (max-width: 600px) {
+        width: 70vw;
+    }
+    @media (max-width: 400px) {
+        width: 100vw;
+    }
 `;
 export const Title = styled.h2`
     text-align:left;

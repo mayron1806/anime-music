@@ -11,6 +11,16 @@ export const Container = styled.div`
     align-items:center;
     background-color:var(--white);
     padding:1rem;
+    @media(max-width: 550px){
+        grid-template-columns: 1fr;
+        grid-template-areas:
+        "name"
+        "buttons"
+        "playback"
+        "volume";
+        height: auto;
+        padding: 0 1rem;
+    }
 `;
 type IconsProps = {
     interactable:boolean
@@ -37,6 +47,10 @@ export const MusicName = styled.p`
     overflow: hidden; 
     text-overflow: ellipsis;
     font-size: 2rem;
+    @media(max-width: 550px){
+        text-align: center;
+        width: 100%;
+    }
 `;
 // buttons
 export const ButtonsContainer = styled.div`

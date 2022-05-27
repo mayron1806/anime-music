@@ -7,6 +7,14 @@ export const Container = styled.div`
     flex-direction: column;
     padding-bottom: 1rem;
     background-color: var(--white);
+    @media (max-width: 600px){
+        height: 55%;
+        width: 80%;
+    }
+    @media (max-width: 550px){
+        height: 45%;
+        width: 80%;
+    }
 `;
 export const Header = styled.header`
     display: flex;
