@@ -47,7 +47,6 @@ export const FormAddMusic = memo(({ isActive }: props) => {
                 message: "Você precisa ter autorização para adicionar uma música."
             });
         }
-        
     }
     return( 
         <C.Form
